@@ -1,0 +1,11 @@
+target/
+node_modules/
+dist/
+*.tsbuildinfo
+.env
+.idea/
+.DS_Store
+.flutter-plugins
+.flutter-plugins-dependencies
+.dart_tool/
+build/

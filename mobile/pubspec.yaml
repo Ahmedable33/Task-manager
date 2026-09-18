@@ -1,0 +1,16 @@
+name: task_manager
+description: Application Task Manager.
+publish_to: none
+version: 1.0.0+1
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  dio: ^5.7.0
+  shared_preferences: ^2.3.3
+  cupertino_icons: ^1.0.8
+dev_dependencies:
+  flutter_lints: ^5.0.0
+flutter:
+  uses-material-design: true
