@@ -1,6 +1,7 @@
 package com.taskmanager.controller;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import com.taskmanager.model.Task;
@@ -32,28 +33,26 @@ class TaskControllerTest {
     controller = new TaskController(tasks, users);
     when(authentication.getName()).thenReturn("user@example.com");
     when(users.findByEmail("user@example.com")).thenReturn(Optional.of(user));
-    when(user.getId()).thenReturn(7L);
   }
 
   @Test
   void createsTodoTaskWhenStatusIsMissing() {
-    Task task = new Task();
-    when(tasks.save(task)).thenReturn(task);
+    when(tasks.save(any(Task.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
     ResponseEntity<Task> response = controller.create(
         new TaskController.TaskRequest("Prepare release", "Run checks", null), authentication);
 
     assertEquals(HttpStatus.CREATED, response.getStatusCode());
-    assertSame(task, response.getBody());
-    assertEquals("Prepare release", task.getTitle());
-    assertEquals("Run checks", task.getDescription());
-    assertEquals(TaskStatus.TODO, task.getStatus());
-    verify(tasks).save(task);
+    assertNotNull(response.getBody());
+    assertEquals("Prepare release", response.getBody().getTitle());
+    assertEquals("Run checks", response.getBody().getDescription());
+    assertEquals(TaskStatus.TODO, response.getBody().getStatus());
   }
 
   @Test
   void updatesTaskOwnedByCurrentUser() {
     Task task = new Task();
+    when(user.getId()).thenReturn(7L);
     when(tasks.findByIdAndUserId(12L, 7L)).thenReturn(Optional.of(task));
     when(tasks.save(task)).thenReturn(task);
 
@@ -70,6 +69,7 @@ class TaskControllerTest {
 
   @Test
   void returnsNotFoundForTaskNotOwnedByCurrentUser() {
+    when(user.getId()).thenReturn(7L);
     when(tasks.findByIdAndUserId(12L, 7L)).thenReturn(Optional.empty());
 
     ResponseEntity<Task> response = controller.update(
