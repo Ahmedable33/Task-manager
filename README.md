@@ -142,6 +142,6 @@ L’interface est accessible depuis `http://localhost:5173` après le démarrage
 
 ### Démonstration vidéo
 
-[Voir la démonstration complète de Task Manager](docs/demo/task-manager-demo.mp4)
+[Voir la démonstration complète de Task Manager sur Google Drive](https://drive.google.com/file/d/1bfSLaOWSSAe5VTzXJTwGk-tIBUvRyEug/view?usp=sharing)
 
 Aucun lien de production n’est déclaré tant qu’un projet GCP et son domaine ne sont pas configurés.
