@@ -2,10 +2,12 @@
 
 Monorepo de gestion de tâches avec authentification JWT, interface web responsive et client Flutter bonus.
 
+Repository public : [github.com/Ahmedable33/Task-manager](https://github.com/Ahmedable33/Task-manager)
+
 ## Stack
 
 - **Backend** : Spring Boot 3, Java 17, Spring Security, JWT, Spring Data JPA, MySQL 8
-- **Frontend** : React 18, Vite, TypeScript, Axios, Lucide
+- **Frontend** : React 18, Vite, TypeScript, Tailwind CSS, Axios, Lucide
 - **Application Task Manager** : Flutter, Dart, Dio, Shared Preferences
 - **Ops** : Docker Compose, GitHub Actions, cible de déploiement GCP Cloud Run
 
@@ -61,7 +63,16 @@ Sur un appareil physique, remplacez l’URL par l’adresse IP locale de la mach
 
 ## CI/CD
 
-`.github/workflows/ci-cd.yml` compile et teste le backend, construit le frontend et vérifie les images Docker sur chaque push ou pull request vers `main`. Le déploiement Cloud Run peut être ajouté avec `google-github-actions/auth`, `setup-gcloud` et des secrets GCP au niveau de l’environnement GitHub.
+`.github/workflows/ci-cd.yml` s’exécute sur chaque push ou pull request vers `main` et vérifie :
+
+- les tests du backend avec Java 17 et Maven ;
+- le build du frontend React avec Node 20 ;
+- l’analyse Flutter et la construction de l’APK Android debug ;
+- la construction des images Docker backend et frontend.
+
+Dernier run validé : [GitHub Actions](https://github.com/Ahmedable33/Task-manager/actions/runs/35437376253).
+
+Le déploiement Cloud Run reste à configurer avec `google-github-actions/auth`, `setup-gcloud` et des secrets GCP.
 
 ## Tests
 
@@ -72,6 +83,25 @@ docker run --rm -v "$PWD/backend":/app -w /app maven:3.9.9-eclipse-temurin-17 mv
 ```
 
 Le frontend est vérifié par `npm run build` dans la CI et lors de la construction de son image Docker.
+
+Vérification frontend en local :
+
+```bash
+cd frontend
+npm ci
+npm run build
+```
+
+Vérification mobile en local :
+
+```bash
+cd mobile
+flutter pub get
+flutter analyze
+flutter build apk --debug
+```
+
+Si Flutter signale que `source.properties` manque dans le NDK, réinstallez la version exacte demandée dans le message d’erreur depuis Android Studio SDK Manager ou avec `sdkmanager`.
 
 ## Variables d’environnement
 
@@ -88,6 +118,30 @@ Le frontend est vérifié par `npm run build` dans la CI et lors de la construct
 
 Le client Flutter prend en charge l’inscription, la connexion JWT, la liste des tâches, le rafraîchissement, la création, la modification, la suppression et la déconnexion.
 
-## Captures et déploiement
+## Rendu et déploiement
 
-L’interface est conçue pour être capturée depuis `http://localhost:5173` après le démarrage Docker. Aucun lien de production n’est déclaré tant qu’un projet GCP et son domaine ne sont pas configurés.
+L’interface est accessible depuis `http://localhost:5173` après le démarrage Docker et peut être capturée pour compléter le rendu.
+
+### Captures d’écran
+
+#### Connexion
+
+![Écran de connexion](docs/screenshots/login.png)
+
+#### Inscription
+
+![Écran d’inscription](docs/screenshots/signup.png)
+
+#### Tableau de bord
+
+![Tableau de bord](docs/screenshots/dashboard.png)
+
+#### Gestion des tâches
+
+![Liste et formulaire de gestion des tâches](docs/screenshots/task-board.png)
+
+### Démonstration vidéo
+
+[Voir la démonstration complète de Task Manager](docs/demo/task-manager-demo.mp4)
+
+Aucun lien de production n’est déclaré tant qu’un projet GCP et son domaine ne sont pas configurés.
